@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:AvaloniaViewer"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaViewer.FaceRecognizerView">
+    <Grid ColumnDefinitions="*,*">
+        <DockPanel>
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Top">
+                <Button Click="Btn_TranOpen_OnClick">Open</Button>
+            </StackPanel>
+            
+            <TableView Name="TranImageList" x:CompileBindings="False">
+                <TableView.Columns>
+                    <TableViewColumn Header="Image">
+                        <TableViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Image}"
+                                       Width="100"
+                                       Height="100"/>
+                            </DataTemplate>
+                        </TableViewColumn.CellTemplate>
+                    </TableViewColumn>
+                    <TableViewColumn Header="Name">
+                        <TableViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"></TextBlock>
+                            </DataTemplate>
+                        </TableViewColumn.CellTemplate>
+                    </TableViewColumn>
+                    <TableViewColumn Header="Feature">
+                        <TableViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Feature}"
+                                           TextWrapping="Wrap" Height="100"></TextBlock>
+                            </DataTemplate>
+                        </TableViewColumn.CellTemplate>
+                    </TableViewColumn>
+                </TableView.Columns>
+            </TableView>
+        </DockPanel>
+        <GridSplitter HorizontalAlignment="Right" MinWidth="1" Background="LightGray"/>
+        <DockPanel Grid.Column="1">
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Top">
+                <Button Click="Btn_RecognizeOpen_OnClick">Open</Button>
+                <Button Click="Btn_Recognize_OnClick">Recognize</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Top">
+                <TextBlock Text="FilePath: "></TextBlock>
+                <TextBlock Name="RecognizeFile"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Top">
+                <TextBlock Text="Result: "></TextBlock>
+                <TextBlock Name="ResultLabel"></TextBlock>
+            </StackPanel>
+
+            <Image Name="RecognizeImage"></Image>
+        </DockPanel>
+    </Grid>
+</UserControl>

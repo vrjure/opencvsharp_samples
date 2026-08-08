@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avaloniaViewer="clr-namespace:AvaloniaViewer"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaViewer.VideoCapture">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top"
+                    Orientation="Horizontal">
+            <Button Click="Start_OnClick">start</Button>
+            <Button Click="Stop_OnClick">stop</Button>
+        </StackPanel>
+        <TextBox DockPanel.Dock="Top" Margin="0,6" Name="TextAddress"></TextBox>
+        <avaloniaViewer:RealTimeRender x:Name="RTR"/>
+    </DockPanel>
+</UserControl>

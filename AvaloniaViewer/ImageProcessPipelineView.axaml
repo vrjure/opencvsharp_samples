@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaViewer.ImageProcessPipelineView">
+    <Grid ColumnDefinitions="*,auto">
+        <Image Name="ResultImage"></Image>
+        <StackPanel Grid.Column="1" VerticalAlignment="Top">
+            <Button Click="Button_OnClick">Open</Button>
+            <Button Click="Button_OnClick">GrayScale</Button>
+            <Button Click="Button_OnClick">GaussianBlur</Button>
+            <Button Click="Button_OnClick">Threshold</Button>
+            <Button Click="Button_OnClick">Morphology</Button>
+            <Button Click="Button_OnClick">Contours</Button>
+        </StackPanel>
+        
+    </Grid>
+</UserControl>
