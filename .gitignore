@@ -254,3 +254,5 @@ paket-files/
 
 # Per-sample images written by DisplayHelper when running with --headless
 headless-output/
+.vscode/launch.json
+AvaloniaViewer/face_detection_yunet_2023mar.onnx

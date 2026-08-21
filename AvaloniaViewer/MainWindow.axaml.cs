@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -16,9 +17,15 @@ namespace AvaloniaViewer;
 
 public partial class MainWindow : Avalonia.Controls.Window
 {
+    private readonly WindowNotificationManager _notificationManager;
     public MainWindow()
     {
         InitializeComponent();
+
+        _notificationManager = new WindowNotificationManager(this)
+        {
+            MaxItems = 3
+        };
     }
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -29,7 +36,7 @@ public partial class MainWindow : Avalonia.Controls.Window
         UserControl? view = selectedItem.Tag?.ToString() switch
         {
             "1" => new CannyEdgeDetection(),
-            "2" => new VideoCapture(),
+            "2" => new VideoCapture(_notificationManager),
             "3" => new FaceDetectYNView(),
             "4" => new FaceRecognizerView(),
             "5" => new ImageProcessPipelineView(),

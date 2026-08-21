@@ -8,8 +8,12 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Top"
                     Orientation="Horizontal">
-            <Button Click="Start_OnClick">start</Button>
-            <Button Click="Stop_OnClick">stop</Button>
+                    <ComboBox Margin="5,0" SelectedIndex="0">
+                        <ComboBoxItem>Yunet_2023</ComboBoxItem>
+                        <ComboBoxItem>YOLO</ComboBoxItem>
+                    </ComboBox>
+                    <Button Click="Start_OnClick" Margin="5,0">start</Button>
+                    <Button Click="Stop_OnClick" Margin="5,0">stop</Button>
         </StackPanel>
         <TextBox DockPanel.Dock="Top" Margin="0,6" Name="TextAddress"></TextBox>
         <avaloniaViewer:RealTimeRender x:Name="RTR"/>

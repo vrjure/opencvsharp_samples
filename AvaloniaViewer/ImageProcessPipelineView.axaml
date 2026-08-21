@@ -8,12 +8,24 @@
         <Image Name="ResultImage"></Image>
         <StackPanel Grid.Column="1" VerticalAlignment="Top">
             <Button Click="Button_OnClick">Open</Button>
+            <Button Click="Button_OnClick">AddMask</Button>
             <Button Click="Button_OnClick">GrayScale</Button>
             <Button Click="Button_OnClick">GaussianBlur</Button>
             <Button Click="Button_OnClick">Threshold</Button>
             <Button Click="Button_OnClick">Morphology</Button>
             <Button Click="Button_OnClick">Contours</Button>
+            <Button Click="Button_OnClick">InRange</Button>
+            <StackPanel Orientation="Horizontal">
+                <Button Click="Button_OnClick">Move+</Button>
+                <Button Click="Button_OnClick">Move-</Button>
+            </StackPanel>
+            <Button Click="Button_OnClick">Rotation</Button>
+            <Button Click="Button_OnClick">Affine</Button>
+            <Button Click="Button_OnClick">Perspective</Button>
+            <Button Click="Button_OnClick">AdaptiveThreshold</Button>
+            <Button Click="Button_OnClick">Filter2D</Button>
+            <Button Click="Button_OnClick">BilateralFilter</Button>
+            <Button Click="Button_OnClick">Gradient</Button>
         </StackPanel>
-        
     </Grid>
 </UserControl>

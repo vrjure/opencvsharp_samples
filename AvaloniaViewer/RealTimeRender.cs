@@ -1,3 +1,4 @@
+using System.IO;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -57,11 +58,32 @@ class VideoCaptureVisualHandler : CompositionCustomVisualHandler
     private CascadeClassifier _cascadeClassifier;
     private FaceDetectorYN _faceDetector;
     private bool _running;
+
+    private readonly Mat _opencv_logo;
+    private Mat _logo_mask = new Mat();
+    private Mat _logo_mask_inv = new Mat();
     public VideoCaptureVisualHandler(OpenCvSharp.VideoCapture vc, CascadeClassifier cascadeClassifier)
     {
         _vc = vc;
         _cascadeClassifier = cascadeClassifier;
+        _opencv_logo = new Mat();
+        using var logo = Cv2.ImRead("OpenCV_logo_white.png");
+
+        using var logo_gray = new Mat();
+        Cv2.CvtColor(logo, logo_gray, ColorConversionCodes.BGR2GRAY);
+        Cv2.Threshold(logo_gray, _logo_mask, 10, 255, ThresholdTypes.Binary);
+        Cv2.BitwiseNot(_logo_mask, _logo_mask_inv);
+
+        Cv2.BitwiseAnd(logo,logo,_opencv_logo, _logo_mask);
+
+        if (!Directory.Exists("output"))
+        {
+            Directory.CreateDirectory("output");
+        }
+
+        Cv2.ImWrite("output/opencv_logo.png", _opencv_logo);
     }
+
     public override void OnRender(ImmediateDrawingContext drawingContext)
     {
         if (_vc == null || _vc.IsDisposed || !_vc.IsOpened()) return;
@@ -72,6 +94,7 @@ class VideoCaptureVisualHandler : CompositionCustomVisualHandler
         }
 
         using var frame = _vc.RetrieveMat();
+        
         if (frame.Empty()) return;
         using var grayImg = new Mat();
         Cv2.CvtColor(frame, grayImg, ColorConversionCodes.BGR2GRAY);
@@ -90,7 +113,10 @@ class VideoCaptureVisualHandler : CompositionCustomVisualHandler
                     var y = row[1];
                     var w = row[2];
                     var h = row[3];
+                    
+                    //var roi = new Mat(frame, new Rect((int)x, (int)y, (int)w, (int)h));
                     Cv2.Rectangle(frame, new Rect((int)x,(int)y,(int)w, (int)h), Scalar.YellowGreen);
+                    //frame[new Rect(0,0, (int)roi.Width,(int)roi.Height)] = roi;
                 }
             }
         }
@@ -99,11 +125,19 @@ class VideoCaptureVisualHandler : CompositionCustomVisualHandler
             var rects = _cascadeClassifier.DetectMultiScale(grayImg, 1.1, 5, HaarDetectionTypes.ScaleImage, new OpenCvSharp.Size(30, 30));
             foreach (var rect in rects)
             {
-                Cv2.Rectangle(frame, rect, Scalar.Red);
+                Cv2.Rectangle(frame, rect, Scalar.YellowGreen);
             }
         }
 
+        var logoROI = frame[new Rect(0,0,_opencv_logo.Width, _opencv_logo.Height)];
         
+        using var bg = new Mat();
+        Cv2.BitwiseAnd(logoROI,logoROI,bg, _logo_mask_inv);
+
+        using var added = new Mat();
+        Cv2.Add(bg, _opencv_logo, added);
+
+        frame[new Rect(0,0,_opencv_logo.Width, _opencv_logo.Height)] = added;
         drawingContext.DrawBitmap(frame.ToAvaloniaBitmap(), GetRenderBounds());
     }
 
