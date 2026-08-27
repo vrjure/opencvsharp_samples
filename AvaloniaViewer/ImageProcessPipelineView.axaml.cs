@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -93,6 +94,15 @@ public partial class ImageProcessPipelineView : UserControl
             case "Gradient":
                 Gradient();
                 break;
+            case "Pyramid":
+                Pyramid();
+                break;
+            case "HIST":
+                HIST();
+                break;
+            case "GrabCut":
+                GrabCut();
+                break;
         }
     }
     
@@ -164,7 +174,41 @@ public partial class ImageProcessPipelineView : UserControl
             contourIdx: -1,
             color: Scalar.Red,
             thickness: 2);
-        
+
+        var fontFace = new FontFace("UTF8");
+        foreach (var item in significantContours)
+        {
+            var m = Cv2.Moments(item);
+            var c_x = m.M10/m.M00;
+            var c_y = m.M01/m.M00;
+            var len = Cv2.ArcLength(item, true);
+            Cv2.Circle(annotated, (int)c_x, (int)c_y, 5, Scalar.Yellow, -1, LineTypes.AntiAlias);
+            Cv2.PutText(annotated, $"面积:{m.M00}", new Point(c_x - 20, c_y + 15), Scalar.Green, fontFace, 15);
+            Cv2.PutText(annotated, $"周长:{len:N2}", new Point(c_x - 20, c_y + 30), Scalar.Green, fontFace, 15);
+
+            var approxPoly = Cv2.ApproxPolyDP(item, len * 0.1, true);
+            Cv2.Polylines(annotated, [approxPoly], true, Scalar.Orange,2);
+            Cv2.PutText(annotated, "approx", approxPoly[0], Scalar.Orange, fontFace, 15);
+
+            var hull = Cv2.ConvexHull(item);
+            Cv2.Polylines(annotated, [hull], true, Scalar.SkyBlue, 2);
+            Cv2.PutText(annotated, "hull", hull[0], Scalar.SkyBlue, fontFace, 15);
+
+            var bound = Cv2.BoundingRect(item);
+            Cv2.Rectangle(annotated, bound, Scalar.Blue);
+            Cv2.PutText(annotated, "bound", bound.TopLeft, Scalar.Blue, fontFace, 15);
+
+            var minArea = Cv2.MinAreaRect(item);
+            var box = minArea.Points().Select(f=> new Point((int)f.X, (int)f.Y)).ToArray();
+            Cv2.Polylines(annotated, [box], true, Scalar.Pink, 2);
+            Cv2.PutText(annotated, "minarea", box[0], Scalar.Pink, fontFace, 15);
+
+            Cv2.MinEnclosingCircle(item, out var center, out var radius);
+            var centerInt = new Point((int)center.X, (int)center.Y);
+            Cv2.Circle(annotated, centerInt, (int)radius, Scalar.Purple);
+            Cv2.PutText(annotated, "minCircle", centerInt, Scalar.Purple, fontFace, 15);
+        }
+
         UpdateImage(annotated);
     }
 
@@ -311,6 +355,59 @@ public partial class ImageProcessPipelineView : UserControl
         Cv2.Laplacian(_resultImage, laplacian, new MatType(-1), 15);
 
         ResultImage.Source = laplacian.ToAvaloniaBitmap();
+    }
+    
+    private void Pyramid()
+    {
+        if (_resultImage == null) return;
+
+        using var g0 = _resultImage.Clone();
+        using var d0 = new Mat();
+        Cv2.PyrDown(_resultImage, d0);
+
+        using var up = new Mat();
+        Cv2.PyrUp(d0, up);
+
+        if (_resultImage.Size() != up.Size())
+        {
+            Cv2.Resize(up,up,_resultImage.Size());
+        }
+
+        using var detail = new Mat();
+        Cv2.Subtract(_resultImage, up, detail);
+
+        using var recover = new Mat();
+        Cv2.Add(up, detail, recover);
+
+        ResultImage.Source = recover.ToAvaloniaBitmap();
+    }
+
+    private void HIST()
+    {
+        if (_resultImage == null) return;
+        
+        var histW =  512;
+        var histH = 400;
+
+        var binW = Math.Max(1, (int)Math.Round(histW/256d));
+        using var hist = new Mat();
+        Cv2.CalcHist([_resultImage], [0], default, hist, 1, [256],[[0,256]]);
+
+        using var histMat = new Mat(histH, histW, MatType.CV_8UC3, Scalar.White);
+        Cv2.Normalize(hist, hist, 0, histMat.Rows, NormTypes.MinMax);
+
+        for (int i = 1; i < 256; i++)
+        {
+            Cv2.Line(histMat, new Point(binW * (i - 1), histH - Math.Round(hist.At<float>(i - 1))), new Point(binW * i, histH - Math.Round(hist.At<float>(i))), Scalar.Blue);
+        }
+        
+        HISTImage.Source = histMat.ToAvaloniaBitmap();
+    }
+
+    private void GrabCut()
+    {
+        if (_resultImage == null) return;
+        
     }
 
     private void UpdateImage(Mat img)

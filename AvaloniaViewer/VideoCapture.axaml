@@ -14,6 +14,12 @@
                     </ComboBox>
                     <Button Click="Start_OnClick" Margin="5,0">start</Button>
                     <Button Click="Stop_OnClick" Margin="5,0">stop</Button>
+                    <Button Click="FaceDetectEnable_Click" Margin="5,0">FaceDetectEnable</Button>
+                    <Button Click="FaceDetectDisable_Click" Margin="5,0">FaceDetectDisable</Button>
+                    <Button Click="AddLogo_Click" Margin="5,0">Add Logo</Button>
+                    <Button Click="RemoveLogo_Click" Margin="5,0">Remove Logo</Button>
+                    <Button Click="OpticalFlowStart_OnClick" Margin="5,0">OpticalFlowStart</Button>
+                    <Button Click="OpticalFlowStop_OnClick" Margin="5,0">OpticalFlowStop</Button>
         </StackPanel>
         <TextBox DockPanel.Dock="Top" Margin="0,6" Name="TextAddress"></TextBox>
         <avaloniaViewer:RealTimeRender x:Name="RTR"/>

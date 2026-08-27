@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaViewer.ImageProcessPipelineView">
-    <Grid ColumnDefinitions="*,auto">
-        <Image Name="ResultImage"></Image>
-        <StackPanel Grid.Column="1" VerticalAlignment="Top">
+    <Grid ColumnDefinitions="*,auto"
+         RowDefinitions="*,auto">
+        <StackPanel Orientation="Vertical">
+            <Image Name="ResultImage"></Image>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <Image Name="HISTImage"></Image>
+        </StackPanel>
+        <StackPanel Grid.Column="1" VerticalAlignment="Top" Grid.RowSpan="2">
             <Button Click="Button_OnClick">Open</Button>
             <Button Click="Button_OnClick">AddMask</Button>
             <Button Click="Button_OnClick">GrayScale</Button>
@@ -26,6 +32,9 @@
             <Button Click="Button_OnClick">Filter2D</Button>
             <Button Click="Button_OnClick">BilateralFilter</Button>
             <Button Click="Button_OnClick">Gradient</Button>
+            <Button Click="Button_OnClick">Pyramid</Button>
+            <Button Click="Button_OnClick">HIST</Button>
+            <Button Click="Button_OnClick">GrabCut</Button>
         </StackPanel>
     </Grid>
 </UserControl>

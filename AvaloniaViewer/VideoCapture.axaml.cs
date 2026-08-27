@@ -17,6 +17,12 @@ public partial class VideoCapture : UserControl
     private readonly OpenCvSharp.VideoCapture capture;
     private readonly CascadeClassifier cascadeClassifier;
     private VideoCaptureVisualHandler _videoVisualHandler;
+
+    public VideoCapture()
+    {
+        InitializeComponent();
+    }
+
     public VideoCapture(WindowNotificationManager? notificationManager = null)
     {
         InitializeComponent();
@@ -28,7 +34,7 @@ public partial class VideoCapture : UserControl
         Loaded += ViewLoaded;
         Unloaded += ViewUnloaded;
     }
-    
+
     private void ViewLoaded(object? sender, RoutedEventArgs e)
     {
         var toplevel = TopLevel.GetTopLevel(this);
@@ -52,14 +58,14 @@ public partial class VideoCapture : UserControl
             return;
         }
 
-        if(int.TryParse(TextAddress.Text, out int index))
+        if (int.TryParse(TextAddress.Text, out int index))
         {
-            if(!capture.Open(index, VideoCaptureAPIs.ANY))
+            if (!capture.Open(index, VideoCaptureAPIs.ANY))
             {
                 _notificationManager?.Show(new Notification("Tip", "Open failed"));
             }
         }
-        else if(!capture.Open(TextAddress.Text, VideoCaptureAPIs.ANY))
+        else if (!capture.Open(TextAddress.Text, VideoCaptureAPIs.ANY))
         {
             _notificationManager?.Show(new Notification("Tip", "Open failed"));
         }
@@ -69,5 +75,33 @@ public partial class VideoCapture : UserControl
     private void Stop_OnClick(object? sender, RoutedEventArgs e)
     {
         RTR.Stop();
+    }
+
+    private void OpticalFlowStart_OnClick(object? sender, RoutedEventArgs e)
+    {
+        RTR.OpticalFlowStart();
+    }
+    private void OpticalFlowStop_OnClick(object? sender, RoutedEventArgs e)
+    {
+        RTR.OpticalFlowStop();
+    }
+
+    private void AddLogo_Click(object? sender, RoutedEventArgs e)
+    {
+        RTR.AddLogo();
+    }
+
+    private void RemoveLogo_Click(object? sender, RoutedEventArgs e)
+    {
+        RTR.RemoveLogo();
+    }
+
+    private void FaceDetectEnable_Click(object? sender, RoutedEventArgs e)
+    {
+        RTR.FaceDetectEnable();
+    }
+    private void FaceDetectDisable_Click(object? sender, RoutedEventArgs e)
+    {
+        RTR.FaceDetectDisable();
     }
 }

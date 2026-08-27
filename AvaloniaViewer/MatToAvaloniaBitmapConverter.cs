@@ -15,6 +15,7 @@ public static class MatToAvaloniaBitmapConverter
     public static WriteableBitmap ToAvaloniaBitmap(this Mat mat)
     {
         using var bgra = new Mat();
+        
         switch (mat.Channels())
         {
             case 1:
